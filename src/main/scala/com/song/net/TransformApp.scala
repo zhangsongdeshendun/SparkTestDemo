@@ -14,16 +14,14 @@ object TransformApp {
 
     val ssc = new StreamingContext(sparkConf, Seconds(1))
 
-
-
-    val black_rdd=ssc.sparkContext.parallelize(Array("song","tian")).map(x=>(x,true))
+    val black_rdd = ssc.sparkContext.parallelize(Array("song", "tian")).map(x => (x, true))
 
     val lines = ssc.socketTextStream("localhost", 6789)
 
-    val click_log=lines.map(x=>(x.split(",")(0),x)).transform(rdd =>{
+    val click_log = lines.map(x => (x.split(",")(1), x)).transform(rdd => {
       rdd.leftOuterJoin(black_rdd)
-        .filter(x=>x._2._2.getOrElse(false)==true)
-        .map(x=>x._2._1)
+        .filter(x => x._2._2.getOrElse(false) != true)
+        .map(x => x._2._1)
     })
 
     click_log.print()

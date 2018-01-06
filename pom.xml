@@ -4,6 +4,7 @@
   <artifactId>sparkTest1</artifactId>
   <version>1.0-SNAPSHOT</version>
   <inceptionYear>2008</inceptionYear>
+
   <properties>
     <scala.version>2.11.8</scala.version>
     <kafka.version>0.9.0.0</kafka.version>
@@ -11,14 +12,6 @@
     <hadoop.version>2.6.0-cdh5.7.0</hadoop.version>
     <hbase.version>1.2.0-cdh5.7.0</hbase.version>
   </properties>
-
-  <!--<repositories>-->
-    <!--<repository>-->
-      <!--<id>scala-tools.org</id>-->
-      <!--<name>Scala-Tools Maven2 Repository</name>-->
-      <!--<url>http://scala-tools.org/repo-releases</url>-->
-    <!--</repository>-->
-  <!--</repositories>-->
 
   <!--添加cloudera的repository-->
   <repositories>
@@ -38,6 +31,7 @@
   </pluginRepositories>
 
   <dependencies>
+    <!--scala 依赖-->
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
@@ -48,6 +42,13 @@
     <dependency>
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-streaming_2.11</artifactId>
+      <version>${spark.version}</version>
+    </dependency>
+
+    <!-- Spark Streaming整合Flume 依赖-->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming-flume_2.11</artifactId>
       <version>${spark.version}</version>
     </dependency>
 
