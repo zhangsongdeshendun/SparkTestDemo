@@ -70,6 +70,9 @@
       <version>3.5</version>
     </dependency>
 
+    <!--flume和logger4对接的依赖-->
+
+
 
 
   </dependencies>

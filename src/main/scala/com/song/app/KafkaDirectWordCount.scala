@@ -1,4 +1,4 @@
-package com.song.net
+package com.song.app
 
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
