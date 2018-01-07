@@ -13,7 +13,7 @@ object NetWordCount {
   def main(args: Array[String]): Unit = {
     val sparkConf = new SparkConf().setMaster("local[2]").setAppName("NetWordCount")
 
-    val ssc = new StreamingContext(sparkConf, Seconds(1))
+    val ssc = new StreamingContext(sparkConf, Seconds(5))
 
     val lines = ssc.socketTextStream("localhost", 9999)
 
