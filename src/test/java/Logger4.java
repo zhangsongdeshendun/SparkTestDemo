@@ -7,7 +7,7 @@ public class Logger4 {
         int index=0;
         while (true){
             Thread.sleep(1000);
-            logger.info("current index is :"+index++);
+            logger.info("index is :"+index++);
         }
 
     }
