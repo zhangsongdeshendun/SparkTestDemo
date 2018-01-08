@@ -1,4 +1,4 @@
-package com.song.app
+package com.song.test
 
 /**
   * 这是一个Scala测试类
