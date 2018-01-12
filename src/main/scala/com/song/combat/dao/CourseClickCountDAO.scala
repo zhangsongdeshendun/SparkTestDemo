@@ -1,6 +1,6 @@
 package com.song.combat.dao
 
-import com.song.combat.utils.CourseClickCount
+import com.song.combat.bean.CourseClickCount
 import com.song.spark.HBaseUtils
 import org.apache.hadoop.hbase.client.Get
 import org.apache.hadoop.hbase.util.Bytes
@@ -45,24 +45,25 @@ object CourseClickCountDAO {
   def count(day_course: String): Long = {
     val table = HBaseUtils.getInstance().getTable(tableName)
 
-    val get=new Get(Bytes.toBytes(day_course))
-    val value=table.get(get).getValue(cf.getBytes,qualifer.getBytes)
-    if(value==0){
+    val get = new Get(Bytes.toBytes(day_course))
+    val value = table.get(get).getValue(cf.getBytes, qualifer.getBytes)
+    if (value == 0) {
       0l
-    }else{
+    } else {
       Bytes.toLong(value)
     }
-
 
   }
 
   def main(args: Array[String]): Unit = {
-    val list=new ListBuffer[CourseClickCount]
-    list.append(CourseClickCount("20170112_8",8))
-    list.append(CourseClickCount("20170112_9",9))
-    list.append(CourseClickCount("20170112_1",100))
+    val list = new ListBuffer[CourseClickCount]
+    list.append(CourseClickCount("20170112_8", 8))
+    list.append(CourseClickCount("20170112_9", 9))
+    list.append(CourseClickCount("20170112_1", 100))
 
     save(list)
+
+    print(count("20170112_8") + " " + count("20170112_9") + "   " + count("20170112_1"))
   }
 
 }

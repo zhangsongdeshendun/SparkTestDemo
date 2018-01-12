@@ -1,11 +1,14 @@
 package com.song.combat
 
-import com.song.combat.bean.ClickLog
+import com.song.combat.bean.{ClickLog, CourseClickCount}
+import com.song.combat.dao.CourseClickCountDAO
 import com.song.combat.utils.DateUtils
 import kafka.serializer.StringDecoder
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.kafka.KafkaUtils
+
+import scala.collection.mutable.ListBuffer
 
 
 /**
@@ -61,7 +64,22 @@ object HandleStreamUserLogApp {
 
     }).filter(clicklog => clicklog.courseId != 0)
 
-    cleanData.print()
+    //    cleanData.print()
+
+    cleanData.map(x => {
+      //HBase rowKey设计：20170101_88
+      (x.time.substring(0, 8) + "_" + x.courseId, 1)
+    }).reduceByKey(_ + _).foreachRDD(rdd => {
+      rdd.foreachPartition(partitionRecords => {
+        var list = new ListBuffer[CourseClickCount]
+        partitionRecords.foreach(pair => {
+          list.append(CourseClickCount(pair._1, pair._2))
+        })
+
+        CourseClickCountDAO.save(list)
+      })
+
+    })
 
 
     ssc.start()

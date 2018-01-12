@@ -1,4 +1,4 @@
-package com.song.combat.utils
+package com.song.combat.bean
 
 /**
   *
