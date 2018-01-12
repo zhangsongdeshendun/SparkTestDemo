@@ -12,7 +12,7 @@ import org.apache.spark.streaming.kafka.KafkaUtils
 object KafkaStringAppp {
 
   def main(args: Array[String]): Unit = {
-    //两个参数是localhost:9092 streamtopic
+    //两个参数是localhost:9092 streamtopic3
     if (args.length != 2) {
       System.err.println("Usage: KafkaDirectWordCount <brokers> <topics>")
       System.exit(1)
