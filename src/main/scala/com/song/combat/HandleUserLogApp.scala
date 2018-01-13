@@ -1,6 +1,6 @@
 package com.song.combat
 
-import com.song.combat.bean.{ClickLog, CourseClickCount}
+import com.song.combat.domain.{ClickLog, CourseClickCount}
 import com.song.combat.dao.CourseClickCountDAO
 import com.song.combat.utils.DateUtils
 import org.apache.spark.{SparkConf, SparkContext}
@@ -47,8 +47,9 @@ object HandleUserLogApp {
       CourseClickCountDAO.save(list)
     })
 
-
-
+  println(CourseClickCountDAO.count("20180113_112")+":"+CourseClickCountDAO.count("20180113_118")+":"+
+    CourseClickCountDAO.count("20180113_130")+":"+CourseClickCountDAO.count("20180113_131")+":"+
+    CourseClickCountDAO.count("20180113_145")+":"+CourseClickCountDAO.count("20180113_146"))
 
 
   }

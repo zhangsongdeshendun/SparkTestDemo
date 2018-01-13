@@ -1,4 +1,4 @@
-package com.song.combat.bean
+package com.song.combat.domain
 
 
 /**

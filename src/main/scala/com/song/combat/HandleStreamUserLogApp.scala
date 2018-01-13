@@ -1,6 +1,6 @@
 package com.song.combat
 
-import com.song.combat.bean.{ClickLog, CourseClickCount}
+import com.song.combat.domain.{ClickLog, CourseClickCount}
 import com.song.combat.dao.CourseClickCountDAO
 import com.song.combat.utils.DateUtils
 import kafka.serializer.StringDecoder

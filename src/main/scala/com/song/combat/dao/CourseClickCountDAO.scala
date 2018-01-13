@@ -1,6 +1,6 @@
 package com.song.combat.dao
 
-import com.song.combat.bean.CourseClickCount
+import com.song.combat.domain.CourseClickCount
 import com.song.spark.HBaseUtils
 import org.apache.hadoop.hbase.client.Get
 import org.apache.hadoop.hbase.util.Bytes
