@@ -1,34 +1,34 @@
 package com.song.combat.dao
 
-import com.song.combat.domain.CourseClickCount
+import com.song.combat.domain.{CourseSearchClickCount}
 import com.song.spark.HBaseUtils
 import org.apache.hadoop.hbase.client.Get
 import org.apache.hadoop.hbase.util.Bytes
 
 import scala.collection.mutable.ListBuffer
 
-
 /**
-  * 实战课程点击数-数据访问层
+  * 从搜索引擎过来的实战课程点击数-数据访问层
   */
 
-object CourseClickCountDAO {
+object CourseSearchClickCountDAO {
 
-  val tableName = "course_clickcount"
+
+  val tableName = "song_course_search_clickcount"
   val cf = "info"
   val qualifer = "click_count"
 
   /**
     * 保存数据到hbase
     *
-    * @param list CourseClickCount的集合
+    * @param list CourseSearchClickCount的集合
     */
-  def save(list: ListBuffer[CourseClickCount]): Unit = {
+  def save(list: ListBuffer[CourseSearchClickCount]): Unit = {
 
     val table = HBaseUtils.getInstance().getTable(tableName)
 
     for (ele <- list) {
-      table.incrementColumnValue(Bytes.toBytes(ele.day_course),
+      table.incrementColumnValue(Bytes.toBytes(ele.day_search_course),
         Bytes.toBytes(cf),
         Bytes.toBytes(qualifer),
         ele.click_count)
@@ -39,13 +39,13 @@ object CourseClickCountDAO {
   /**
     * 根据rowkey查询值
     *
-    * @param day_course
+    * @param day_search_course
     * @return
     */
-  def count(day_course: String): Long = {
+  def count(day_search_course: String): Long = {
     val table = HBaseUtils.getInstance().getTable(tableName)
 
-    val get = new Get(Bytes.toBytes(day_course))
+    val get = new Get(Bytes.toBytes(day_search_course))
     val value = table.get(get).getValue(cf.getBytes, qualifer.getBytes)
     if (value == 0) {
       0l
@@ -56,14 +56,13 @@ object CourseClickCountDAO {
   }
 
   def main(args: Array[String]): Unit = {
-    val list = new ListBuffer[CourseClickCount]
-    list.append(CourseClickCount("20170112_8", 8))
-    list.append(CourseClickCount("20170112_9", 9))
-    list.append(CourseClickCount("20170112_1", 100))
+    val list = new ListBuffer[CourseSearchClickCount]
+    list.append(CourseSearchClickCount("20170112_www.baidu.com_8", 8))
+    list.append(CourseSearchClickCount("20170112_bing.com_9", 9))
 
     save(list)
 
-    print(count("20170112_8") + " " + count("20170112_9") + "   " + count("20170112_1"))
+    print(count("20170112_www.baidu.com_8") + " " + count("20170112_bing.com_9"))
   }
 
 }

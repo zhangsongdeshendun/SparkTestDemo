@@ -1,19 +1,19 @@
 package com.song.combat
 
-import com.song.combat.domain.{ClickLog, CourseClickCount}
-import com.song.combat.dao.CourseClickCountDAO
+import com.song.combat.dao.{CourseSearchClickCountDAO}
+import com.song.combat.domain.{ClickLog, CourseSearchClickCount}
 import com.song.combat.utils.DateUtils
 import org.apache.spark.{SparkConf, SparkContext}
 
 import scala.collection.mutable.ListBuffer
 
 /**
-  * 用来测试数据清洗
+  * 用来完成实战2，用引流过来的实战课程的点击量
   *
   * 72.98.132.29	2018-01-09 12:01:00	"GET /class/112.html HTTP/1.1"	404	http://www.cn.bing.com/search?q=Hadoop 基础
   */
 
-object HandleUserLogApp {
+object HandleUserSearchClickApp {
 
 
   def main(args: Array[String]): Unit = {
@@ -36,21 +36,25 @@ object HandleUserLogApp {
       ClickLog(infos(0), DateUtils.parseToMinute(infos(1)), courseId, infos(3).toInt, infos(4))
     }).filter(clicklog => clicklog.courseId != 0)
 
-    //把数据写入到hbase中
-    val pairs = cleanData.map(clicklog => {
-      (clicklog.time.substring(0, 8) + "_" + clicklog.courseId, 1)
+    //统计从搜索引擎过来今天到现在为止实战课程的访问量
+    cleanData.map(x => {
+      val referer = x.referer.replaceAll("//", "/")
+      val splits = referer.split("/")
+      var host = ""
+      if (splits.length > 2) {
+        host = splits(1)
+      }
+      (host, x.courseId, x.time)
+
+    }).filter(_._1 != "").map(x => {
+      (x._3.substring(0, 8) + "_" + x._1 + "_" + x._2, 1)
     }).reduceByKey(_ + _).foreachPartition(part => {
-      val list = new ListBuffer[CourseClickCount]
+      val list = new ListBuffer[CourseSearchClickCount]
       part.foreach(x => {
-        list.append(CourseClickCount(x._1, x._2))
+        list.append(CourseSearchClickCount(x._1, x._2))
       })
-      CourseClickCountDAO.save(list)
+      CourseSearchClickCountDAO.save(list)
     })
-
-  println(CourseClickCountDAO.count("20180113_112")+":"+CourseClickCountDAO.count("20180113_118")+":"+
-    CourseClickCountDAO.count("20180113_130")+":"+CourseClickCountDAO.count("20180113_131")+":"+
-    CourseClickCountDAO.count("20180113_145")+":"+CourseClickCountDAO.count("20180113_146"))
-
 
   }
 
